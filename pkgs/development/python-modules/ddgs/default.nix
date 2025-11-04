@@ -12,14 +12,14 @@
 
 buildPythonPackage rec {
   pname = "ddgs";
-  version = "9.6.1";
+  version = "9.7.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "deedy5";
     repo = "ddgs";
     tag = "v${version}";
-    hash = "sha256-NaOwklHea3TUDa2M23X549IiX5zP87N9qWKkr5PObLY=";
+    hash = "sha256-SOykO+vGWeCb7u7zQTmFlydQVIG+nD0X3TjebLFwJsA=";
   };
 
   patches = [
