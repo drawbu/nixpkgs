@@ -1,23 +1,30 @@
 {
-  lib,
-  stdenv,
-  fetchFromCodeberg,
   autoreconfHook,
   boost,
   fcgi,
-  openssl,
-  opensaml-cpp,
+  fetchFromCodeberg,
+  gitUpdater,
+  lib,
   log4shib,
+  opensaml-cpp,
+  openssl,
   pkg-config,
+  stdenv,
   xercesc,
   xml-security-c,
   xml-tooling-c,
-  unstableGitUpdater,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "shibboleth-sp";
   version = "3.6.0";
+
+  outputs = [
+    "out"
+    "bin"
+    "dev"
+    "doc"
+  ];
 
   src = fetchFromCodeberg {
     owner = "Shibboleth";
@@ -33,9 +40,9 @@ stdenv.mkDerivation (finalAttrs: {
   buildInputs = [
     boost
     fcgi
-    openssl
-    opensaml-cpp
     log4shib
+    opensaml-cpp
+    openssl
     xercesc
     xml-security-c
     xml-tooling-c
@@ -43,17 +50,17 @@ stdenv.mkDerivation (finalAttrs: {
 
   configureFlags = [
     "--without-apxs"
-    "--with-xmltooling=${xml-tooling-c}"
-    "--with-saml=${opensaml-cpp}"
     "--with-boost=${boost.dev}"
     "--with-fastcgi"
-    "--with-boost=${boost.dev}"
     "CXXFLAGS=-std=c++14"
   ];
 
   enableParallelBuilding = true;
 
-  passthru.updateScript = unstableGitUpdater { };
+  passthru.updateScript = gitUpdater { ignoredVersions = "alpha|beta|rc"; };
+
+  __structuredAttrs = true;
+  strictDeps = true;
 
   meta = {
     homepage = "https://shibboleth.net/products/service-provider.html";
