@@ -13,12 +13,19 @@
   xercesc,
   xml-security-c,
   xml-tooling-c,
-  unstableGitUpdater,
+  gitUpdater,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "shibboleth-sp";
   version = "3.6.0";
+
+  outputs = [
+    "out"
+    "bin"
+    "dev"
+    "doc"
+  ];
 
   src = fetchFromCodeberg {
     owner = "Shibboleth";
@@ -65,17 +72,14 @@ stdenv.mkDerivation (finalAttrs: {
 
   configureFlags = [
     "--without-apxs"
-    "--with-xmltooling=${xml-tooling-c}"
-    "--with-saml=${opensaml-cpp}"
     "--with-boost=${boost.dev}"
     "--with-fastcgi"
-    "--with-boost=${boost.dev}"
     "CXXFLAGS=-std=c++14"
   ];
 
   enableParallelBuilding = true;
 
-  passthru.updateScript = unstableGitUpdater { };
+  passthru.updateScript = gitUpdater { ignoredVersions = "alpha|beta|rc"; };
 
   meta = {
     homepage = "https://shibboleth.net/products/service-provider.html";
