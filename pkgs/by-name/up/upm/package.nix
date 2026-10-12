@@ -4,6 +4,7 @@
   jq,
   lib,
   versionCheckHook,
+  vitestCheckHook,
 }:
 
 buildNpmPackage (finalAttrs: {
@@ -30,19 +31,17 @@ buildNpmPackage (finalAttrs: {
   npmDepsHash = "sha256-0pJg9noJ77Nj4JYC120WchlQkNDG7z6JTbH7+tncX6Y=";
 
   doCheck = true;
-  checkPhase = ''
-    runHook preCheck
+  nativeCheckInputs = [ vitestCheckHook ];
+  vitestFlags = [
+    "--test-timeout=30000"
+    "--testNamePattern=^(?!.*passes a signal on to the script)"
+  ];
 
+  preCheck = ''
     substituteInPlace test/cli.test.ts \
       --replace-fail '#!/usr/bin/env node' '#!''${process.execPath}'
 
-    (
-      unset npm_config_offline # allow local registries
-      CI=true node_modules/.bin/vitest run --no-cache --no-fsModuleCache --test-timeout=30000 \
-        --testNamePattern='^(?!.*passes a signal on to the script)' # needs pgrep, missing on Darwin
-    )
-
-    runHook postCheck
+    unset npm_config_offline # allow local registries
   '';
   __darwinAllowLocalNetworking = true;
 
