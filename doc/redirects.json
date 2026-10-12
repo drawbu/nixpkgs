@@ -3054,6 +3054,12 @@
   "versioncheckhook": [
     "index.html#versioncheckhook"
   ],
+  "vitest-check-hook": [
+    "index.html#vitest-check-hook"
+  ],
+  "vitest-check-hook-variables": [
+    "index.html#vitest-check-hook-variables"
+  ],
   "waf-hook": [
     "index.html#waf-hook"
   ],

@@ -602,6 +602,10 @@
                   "file": "hooks/versionCheckHook.section.md"
                 },
                 {
+                  "id": "vitest-check-hook",
+                  "file": "hooks/vitest-check-hook.section.md"
+                },
+                {
                   "id": "waf",
                   "file": "hooks/waf.section.md"
                 },
