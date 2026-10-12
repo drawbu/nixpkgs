@@ -49,6 +49,8 @@ buildNpmPackage (finalAttrs: {
   doInstallCheck = true;
   nativeInstallCheckInputs = [ versionCheckHook ];
 
+  passthru.updateScript = ./update.sh;
+
   meta = {
     description = "Fast, tiny package manager for the npm registry, written in TypeScript";
     homepage = "https://upm.sh";
