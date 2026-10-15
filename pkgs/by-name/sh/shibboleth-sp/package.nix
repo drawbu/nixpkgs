@@ -2,7 +2,6 @@
   lib,
   stdenv,
   fetchFromCodeberg,
-  fetchpatch,
   autoreconfHook,
   boost,
   fcgi,
@@ -26,27 +25,6 @@ stdenv.mkDerivation (finalAttrs: {
     tag = finalAttrs.version;
     hash = "sha256-edcRzf95NILkQbIf6cXNefQuksDHmbqa2jR6QNn/tno=";
   };
-
-  # Upgrade to Clang 19 (and thereby LLVM19) causes `std::char_traits` to now be present,
-  # making `char_traits` references ambiguous due to both `std` and `xmltooling` exporting this symbol,
-  # and the file in question uses both `using namespace std;` and `using namespace xmltooling;`
-  # The patches below result in `xmltooling` being removed.
-  # As `char_traits` is a compile time construct, no runtime repercussions can stem from this.
-  # See https://shibboleth.atlassian.net/browse/SSPCPP-998 for a related discussion.
-  patches = lib.optionals (stdenv.cc.isClang && lib.versionAtLeast stdenv.cc.version "19") [
-    (fetchpatch {
-      name = "char-traits-ambig-1";
-      url = "https://codeberg.org/Shibboleth/cpp-sp/commit/49cd05fa6d9935a45069fa555db7a26ca77d23db.diff";
-      hash = "sha256-ZF0jsZJoHaxaPPjVbT6Wlq+wjyPQLTnEKcUxONji/hE=";
-    })
-
-    (fetchpatch {
-      name = "char-traits-ambig-2";
-      url = "https://codeberg.org/Shibboleth/cpp-sp/commit/793663a67aaa4e9a4aa9172728d924f8cec45cf6.diff";
-      includes = [ "shibsp/util/IPRange.cpp" ];
-      hash = "sha256-4iGwCGpGwAkriOwQmh5AgvHLX1o39NuQ2l4sAJbD2bc=";
-    })
-  ];
 
   nativeBuildInputs = [
     autoreconfHook
